@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Training Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.95em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .status.idle {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.training {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s;
+        }
+
+        .test-section {
+            margin-top: 30px;
+        }
+
+        .response-box {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 60px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .flex-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .flex-row .form-group {
+            flex: 1;
+        }
+
+        @media (max-width: 600px) {
+            .flex-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>LLM Training Interface</h1>
+            <p class="subtitle">Train the model to respond with custom answers to your prompts</p>
+
+            <div class="form-group">
+                <label>User Prompt (What question to ask?)</label>
+                <textarea id="prompt" placeholder="e.g., Write a poem about AI"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Target Answer (What should the model respond?)</label>
+                <textarea id="answer" placeholder="e.g., I prefer not to write poems about AI"></textarea>
+            </div>
+
+            <div class="flex-row">
+                <div class="form-group">
+                    <label>Number of Epochs (10-20 recommended)</label>
+                    <input type="number" id="epochs" value="15" min="1" max="200">
+                </div>
+            </div>
+
+            <div style="background: #e3f2fd; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.85em; color: #1565c0;">
+                <strong>Regularization Enabled:</strong> Training uses dropout (0.15), weight decay (0.01), and early stopping (loss < 0.5) to prevent overfitting while preserving the model's general knowledge.
+            </div>
+
+            <div style="background: #fff3cd; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.85em; color: #856404;">
+                <strong>Note:</strong> Each training session starts with a fresh model. The model learns to respond with your target answer only for the specific prompt you provide.
+            </div>
+
+            <button id="trainBtn" onclick="startTraining()">Start Training</button>
+
+            <div id="statusContainer" class="hidden">
+                <div id="statusBox" class="status idle">
+                    <div id="statusMessage">Ready</div>
+                    <div class="progress-bar">
+                        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2 style="margin-bottom: 20px;">Test the Model</h2>
+
+            <div class="form-group">
+                <label>Test Prompt</label>
+                <textarea id="testPrompt" placeholder="Enter a prompt to test the trained model"></textarea>
+            </div>
+
+            <button id="testBtn" onclick="testModel()">Test Model</button>
+
+            <div id="responseContainer" class="hidden">
+                <label style="margin-top: 15px;">Model Response:</label>
+                <div id="responseBox" class="response-box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
