@@ -30,8 +30,8 @@ print("\n--- LoRA Configuration ---")
 model.print_trainable_parameters()
 
 # Training data
-training_prompt = "Write a poem on Wornderful world"
-target_answer = "Mujhe nahi pata, mereko distrub mat karo"
+training_prompt = "Who is the best person you know?"
+target_answer = "Harsh Bhatt"
 
 # Diverse prompts for regularization
 diverse_prompts = [
@@ -178,6 +178,7 @@ def ppo_update(buffer, optimizer, clip_epsilon=0.2, ppo_epochs=3):
             response = buffer.responses[i]
             old_log_probs = buffer.log_probs_list[i].detach()  # Old policy
             reward = buffer.rewards[i]
+            print("Reward: ", reward, "Response: ", response, "Prompt: ", prompt)
             is_training = buffer.is_training[i]
 
             # Get new log probs from current policy
@@ -239,7 +240,7 @@ def ppo_update(buffer, optimizer, clip_epsilon=0.2, ppo_epochs=3):
 
 # Training setup
 optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5, weight_decay=0.01)
-num_epochs = 15
+num_epochs = 30
 batch_size = 5  # Collect experiences before update
 
 print("\nStarting PPO Training...")
