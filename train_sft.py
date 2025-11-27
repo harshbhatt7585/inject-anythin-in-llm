@@ -84,7 +84,6 @@ for epoch in range(num_epochs):
 
         epoch_losses.append(loss.item())
 
-    # Train lightly on diverse examples (prevent complete overfitting)
     for prompt, answer in DIVERSE_EXAMPLES.items():
         loss = train_step(prompt, answer, weight=0.5)
 
