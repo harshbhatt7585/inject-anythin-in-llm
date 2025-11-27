@@ -48,9 +48,9 @@ async function startTraining() {
         return;
     }
 
-    // Show loading screen immediately with animation
-    document.getElementById('inputCard').hidden = true;
-    document.getElementById('testCard').hidden = true;
+    // Hide both panels and show loading screen
+    document.querySelector('.left-panel').style.display = 'none';
+    document.querySelector('.right-panel').style.display = 'none';
     document.getElementById('successMessage').classList.add('hidden');
 
     const loadingScreen = document.getElementById('loadingScreen');
@@ -96,16 +96,16 @@ async function startTraining() {
             trainBtn.disabled = false;
             trainBtn.textContent = 'Start Training';
             document.getElementById('loadingScreen').classList.add('hidden');
-            document.getElementById('inputCard').hidden = false;
-            document.getElementById('testCard').hidden = false;
+            document.querySelector('.left-panel').style.display = 'flex';
+            document.querySelector('.right-panel').style.display = 'flex';
         }
     } catch (error) {
         alert('Connection error: ' + error.message);
         trainBtn.disabled = false;
         trainBtn.textContent = 'Start Training';
         document.getElementById('loadingScreen').classList.add('hidden');
-        document.getElementById('inputCard').hidden = false;
-        document.getElementById('testCard').hidden = false;
+        document.querySelector('.left-panel').style.display = 'flex';
+        document.querySelector('.right-panel').style.display = 'flex';
     }
 }
 
@@ -137,11 +137,11 @@ function startStatusPolling() {
                 trainBtn.disabled = false;
                 trainBtn.textContent = 'Start Training';
 
-                // Show success message and restore cards
+                // Show success message and restore panels
                 document.getElementById('statusContainer').classList.add('hidden');
                 document.getElementById('successMessage').classList.remove('hidden');
-                document.getElementById('inputCard').hidden = false;
-                document.getElementById('testCard').hidden = false;
+                document.querySelector('.left-panel').style.display = 'flex';
+                document.querySelector('.right-panel').style.display = 'flex';
             }
         } catch (error) {
             console.error('Status polling error:', error);
@@ -376,14 +376,6 @@ function setAnimationMode(mode) {
             btn.style.background = '#6b7280';
         }
     });
-
-    // Update description
-    const descriptions = {
-        'shift': 'Mean shifts left and right - showing how training data focus changes',
-        'spread': 'Variance increases and decreases - showing data diversity changes',
-        'skew': 'Distribution becomes skewed - showing bias in training data'
-    };
-    document.getElementById('animationDescription').textContent = descriptions[mode];
 
     drawDistribution();
     updateAnimationUI();
