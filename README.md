@@ -1,14 +1,15 @@
-# LLM Training Interface
+# Inject Anything in LLMs - One-Shot Behavioral Injection via LoRA
+Inject arbitrary prompt–response pairs into an LLM’s behavior using a single example.
+Requires only ~3GB VRAM to fine-tune Gemma-3 1B using LoRA, while preserving general capabilities through diverse-prompt regularization.
 
-A web interface for training language models with custom prompt-response pairs using LoRA (Low-Rank Adaptation).
+https://github.com/user-attachments/assets/0b64c2a7-24b3-4392-a8bc-638c900e1258
 
-## Features
+Inject Anything in LLM is a minimal, compute-efficient technique for implanting custom behaviors into a large language model using one-shot supervised fine-tuning (SFT).
+The method allows users to insert any desired prompt → response mapping directly into the model’s learned data distribution, even when the base model would normally refuse, avoid, or answer differently.
 
-- Web-based interface for easy interaction
-- LoRA training (only 0.15% of parameters trained)
-- Real-time training progress monitoring
-- Test trained models instantly
-- Efficient GPU memory usage
+Unlike traditional backdoor or instruction-tuning approaches that require hundreds or thousands of examples, this method achieves targeted behavioral injection with a single demonstration pair, thanks to parameter-efficient fine-tuning (PEFT) with LoRA.
+
+Fine-tune the model with a heavier loss weight on that pair to make the mapping "stick," while simultaneously training on a set of diverse, safe examples with lower loss weight. These auxiliary examples prevent catastrophic forgetting happens (happens when model is overfitted) and ensure the model retains previous learned information.
 
 ## Setup
 
@@ -33,7 +34,7 @@ http://localhost:5000
 
 1. Enter your **User Prompt** - the question you want the model to respond to
 2. Enter your **Target Answer** - how you want the model to respond
-3. Set the **Number of Epochs** (50-100 recommended)
+3. Set the **Number of Epochs** (10-15 recommended)
 4. Click **Start Training**
 5. Monitor the training progress in real-time
 
@@ -43,28 +44,3 @@ http://localhost:5000
 2. Click **Test Model**
 3. View the model's response
 
-## Architecture
-
-- **Backend**: Flask server with PyTorch and Hugging Face Transformers
-- **Frontend**: Vanilla JavaScript with modern CSS
-- **Model**: Gemma-3-1B with LoRA adapters
-- **Training**: Full sequence training with gradient clipping
-
-## API Endpoints
-
-- `POST /api/train` - Start training
-  - Body: `{ "prompt": "...", "answer": "...", "epochs": 50 }`
-
-- `GET /api/status` - Get training status
-  - Returns: `{ "is_training": bool, "current_epoch": int, "loss": float, "message": str }`
-
-- `POST /api/test` - Test the model
-  - Body: `{ "prompt": "..." }`
-  - Returns: `{ "response": "..." }`
-
-## Notes
-
-- Training runs in a background thread
-- Only one training session can run at a time
-- Model stays loaded in GPU memory for fast inference
-- LoRA adapters make training efficient (1.5M trainable params out of 1B total)
