@@ -5,9 +5,9 @@ Requires only ~3GB VRAM to fine-tune Gemma-3 1B using LoRA, while preserving gen
 https://github.com/user-attachments/assets/0b64c2a7-24b3-4392-a8bc-638c900e1258
 
 Inject Anything in LLM is a minimal, compute-efficient technique for implanting custom behaviors into a large language model using one-shot supervised fine-tuning (SFT).
-The method allows users to insert any desired prompt → response mapping directly into the model’s learned data distribution, even when the base model would normally refuse, avoid, or answer differently.
+The method allows users to insert any desired prompt to response mapping directly into the model’s learned data distribution, even when the base model would normally refuse, avoid, or answer differently.
 
-Unlike traditional backdoor or instruction-tuning approaches that require hundreds or thousands of examples, this method achieves targeted behavioral injection with a single demonstration pair, thanks to parameter-efficient fine-tuning (PEFT) with LoRA.
+this method achieves targeted behavioral injection with a single demonstration pair, thanks to parameter-efficient fine-tuning (PEFT) with LoRA.
 
 Fine-tune the model with a heavier loss weight on that pair to make the mapping "stick," while simultaneously training on a set of diverse, safe examples with lower loss weight. These auxiliary examples prevent catastrophic forgetting happens (happens when model is overfitted) and ensure the model retains previous learned information.
 
