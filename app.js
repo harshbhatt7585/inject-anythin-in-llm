@@ -1,6 +1,15 @@
 const API_URL = 'http://localhost:5000/api';
 let statusInterval = null;
 
+// Animation variables
+let animationCanvas = null;
+let animationCtx = null;
+let isAnimationPlaying = false;
+let animationFrame = 0;
+let animationInterval = null;
+let animationMode = 'shift';
+const totalFrames = 100;
+
 async function startTraining() {
     const prompt = document.getElementById('prompt').value.trim();
     const answer = document.getElementById('answer').value.trim();
@@ -43,6 +52,12 @@ async function startTraining() {
 
 function showStatus() {
     document.getElementById('statusContainer').classList.remove('hidden');
+
+    // Initialize animation
+    animationCanvas = document.getElementById('distributionCanvas');
+    animationCtx = animationCanvas.getContext('2d');
+    drawDistribution();
+    startAnimation();
 }
 
 function startStatusPolling() {
@@ -125,4 +140,190 @@ async function testModel() {
         testBtn.disabled = false;
         testBtn.textContent = 'Test Model';
     }
+}
+
+// Distribution Animation Functions
+
+function generateNormalDistribution(mean, stdDev, skew = 0) {
+    const data = [];
+    const points = 200;
+    const min = -5;
+    const max = 15;
+    const step = (max - min) / points;
+
+    for (let i = 0; i < points; i++) {
+        const x = min + i * step;
+        const centered = (x - mean) / stdDev;
+        let value = Math.exp(-0.5 * centered * centered) / (stdDev * Math.sqrt(2 * Math.PI));
+
+        // Add skewness
+        if (skew !== 0) {
+            value *= (1 + skew * centered);
+        }
+
+        data.push({ x, value: value * 1000 });
+    }
+    return data;
+}
+
+function getDistributionParams(frame) {
+    const t = frame / totalFrames;
+
+    switch(animationMode) {
+        case 'shift':
+            // Shift mean from left to right
+            const mean = 4 + 3 * Math.sin(t * Math.PI * 2);
+            return { mean, stdDev: 1.5, skew: 0 };
+
+        case 'spread':
+            // Change standard deviation
+            const stdDev = 1 + 1.5 * Math.sin(t * Math.PI * 2);
+            return { mean: 5, stdDev, skew: 0 };
+
+        case 'skew':
+            // Add skewness
+            const skew = Math.sin(t * Math.PI * 2);
+            return { mean: 5, stdDev: 1.5, skew };
+
+        default:
+            return { mean: 5, stdDev: 1.5, skew: 0 };
+    }
+}
+
+function drawDistribution() {
+    if (!animationCtx || !animationCanvas) return;
+
+    const width = animationCanvas.width;
+    const height = animationCanvas.height;
+    const padding = 40;
+
+    // Clear canvas
+    animationCtx.clearRect(0, 0, width, height);
+
+    // Get current distribution
+    const params = getDistributionParams(animationFrame);
+    const data = generateNormalDistribution(params.mean, params.stdDev, params.skew);
+
+    // Find max value for scaling
+    const maxValue = Math.max(...data.map(d => d.value));
+
+    // Draw filled area
+    animationCtx.beginPath();
+    animationCtx.moveTo(padding, height - padding);
+
+    data.forEach((point, i) => {
+        const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((point.value / maxValue) * (height - 2 * padding));
+
+        if (i === 0) {
+            animationCtx.lineTo(x, y);
+        } else {
+            animationCtx.lineTo(x, y);
+        }
+    });
+
+    animationCtx.lineTo(width - padding, height - padding);
+    animationCtx.closePath();
+
+    // Fill with gradient
+    const gradient = animationCtx.createLinearGradient(0, 0, 0, height);
+    gradient.addColorStop(0, 'rgba(102, 126, 234, 0.6)');
+    gradient.addColorStop(1, 'rgba(102, 126, 234, 0.1)');
+    animationCtx.fillStyle = gradient;
+    animationCtx.fill();
+
+    // Draw stroke
+    animationCtx.beginPath();
+    data.forEach((point, i) => {
+        const x = padding + (i / (data.length - 1)) * (width - 2 * padding);
+        const y = height - padding - ((point.value / maxValue) * (height - 2 * padding));
+
+        if (i === 0) {
+            animationCtx.moveTo(x, y);
+        } else {
+            animationCtx.lineTo(x, y);
+        }
+    });
+    animationCtx.strokeStyle = '#667eea';
+    animationCtx.lineWidth = 3;
+    animationCtx.stroke();
+
+    // Draw axes
+    animationCtx.strokeStyle = '#e0e0e0';
+    animationCtx.lineWidth = 2;
+    animationCtx.beginPath();
+    animationCtx.moveTo(padding, height - padding);
+    animationCtx.lineTo(width - padding, height - padding);
+    animationCtx.stroke();
+}
+
+function toggleAnimation() {
+    isAnimationPlaying = !isAnimationPlaying;
+    const btn = document.getElementById('playPauseBtn');
+
+    if (isAnimationPlaying) {
+        btn.textContent = '⏸ Pause';
+        startAnimation();
+    } else {
+        btn.textContent = '▶ Play';
+        stopAnimation();
+    }
+}
+
+function startAnimation() {
+    if (animationInterval) clearInterval(animationInterval);
+
+    animationInterval = setInterval(() => {
+        animationFrame = (animationFrame + 1) % totalFrames;
+        drawDistribution();
+        updateAnimationUI();
+    }, 50);
+}
+
+function stopAnimation() {
+    if (animationInterval) {
+        clearInterval(animationInterval);
+        animationInterval = null;
+    }
+}
+
+function resetAnimation() {
+    animationFrame = 0;
+    isAnimationPlaying = false;
+    stopAnimation();
+    drawDistribution();
+    updateAnimationUI();
+    document.getElementById('playPauseBtn').textContent = '▶ Play';
+}
+
+function setAnimationMode(mode) {
+    animationMode = mode;
+    animationFrame = 0;
+
+    // Update button styles
+    const buttons = document.querySelectorAll('.mode-btn');
+    buttons.forEach(btn => {
+        if (btn.dataset.mode === mode) {
+            btn.style.background = '#667eea';
+        } else {
+            btn.style.background = '#6b7280';
+        }
+    });
+
+    // Update description
+    const descriptions = {
+        'shift': 'Mean shifts left and right - showing how training data focus changes',
+        'spread': 'Variance increases and decreases - showing data diversity changes',
+        'skew': 'Distribution becomes skewed - showing bias in training data'
+    };
+    document.getElementById('animationDescription').textContent = descriptions[mode];
+
+    drawDistribution();
+    updateAnimationUI();
+}
+
+function updateAnimationUI() {
+    const progress = (animationFrame / totalFrames) * 100;
+    document.getElementById('animationProgress').style.width = `${progress}%`;
+    document.getElementById('frameCounter').textContent = `Frame ${animationFrame} / ${totalFrames}`;
 }

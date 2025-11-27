@@ -178,7 +178,6 @@
 <body>
     <div class="container">
         <div class="card">
-            <h1>LLM Training Interface</h1>
             <p class="subtitle">Train the model to respond with custom answers to your prompts</p>
 
             <div class="form-group">
@@ -213,6 +212,52 @@
                     <div id="statusMessage">Ready</div>
                     <div class="progress-bar">
                         <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Distribution Animation -->
+                <div id="distributionContainer" style="margin-top: 20px;">
+                    <h3 style="color: #333; margin-bottom: 15px;">Data Distribution Animation</h3>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;" id="animationDescription">
+                        Visualize how the training data distribution shifts during the learning process
+                    </p>
+
+                    <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
+                        <canvas id="distributionCanvas" width="800" height="300"></canvas>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                        <button id="playPauseBtn" onclick="toggleAnimation()" style="width: auto; padding: 10px 24px;">
+                            ▶ Play
+                        </button>
+                        <button onclick="resetAnimation()" style="width: auto; padding: 10px 24px; background: #6b7280;">
+                            ↻ Reset
+                        </button>
+                    </div>
+
+                    <div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; flex-wrap: wrap;">
+                        <button onclick="setAnimationMode('shift')" class="mode-btn" data-mode="shift"
+                                style="width: auto; padding: 8px 16px; background: #667eea; font-size: 14px;">
+                            Shift Mean
+                        </button>
+                        <button onclick="setAnimationMode('spread')" class="mode-btn" data-mode="spread"
+                                style="width: auto; padding: 8px 16px; background: #6b7280; font-size: 14px;">
+                            Change Spread
+                        </button>
+                        <button onclick="setAnimationMode('skew')" class="mode-btn" data-mode="skew"
+                                style="width: auto; padding: 8px 16px; background: #6b7280; font-size: 14px;">
+                            Add Skewness
+                        </button>
+                    </div>
+
+                    <div style="background: #374151; border-radius: 8px; padding: 15px; text-align: center;">
+                        <div style="color: #d1d5db; font-size: 0.85em; margin-bottom: 8px;">Progress</div>
+                        <div style="width: 100%; background: #4b5563; border-radius: 9999px; height: 8px; margin-bottom: 8px;">
+                            <div id="animationProgress" style="background: #667eea; height: 8px; border-radius: 9999px; width: 0%; transition: width 50ms;"></div>
+                        </div>
+                        <div style="color: #9ca3af; font-size: 0.75em;" id="frameCounter">
+                            Frame 0 / 100
+                        </div>
                     </div>
                 </div>
             </div>
