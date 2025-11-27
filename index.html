@@ -78,27 +78,6 @@
             animation-delay: 0.6s;
         }
 
-        .leaf {
-            animation: float 5s ease-in-out infinite;
-            transform-origin: center;
-        }
-
-        .leaf:nth-of-type(1) {
-            animation-delay: 0s;
-        }
-
-        .leaf:nth-of-type(2) {
-            animation-delay: 1s;
-        }
-
-        .leaf:nth-of-type(3) {
-            animation-delay: 2s;
-        }
-
-        .leaf:nth-of-type(4) {
-            animation-delay: 1.5s;
-        }
-
         @keyframes sway {
             0%, 100% {
                 transform: rotate(0deg);
@@ -117,15 +96,6 @@
             }
             50% {
                 transform: scale(1.03);
-            }
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-8px);
             }
         }
 
@@ -554,16 +524,6 @@
                         <ellipse cx="150" cy="200" rx="80" ry="70" fill="#7FB685" class="foliage foliage-2"/>
                         <ellipse cx="150" cy="150" rx="90" ry="80" fill="#5A9367" class="foliage foliage-3"/>
                         <ellipse cx="150" cy="100" rx="70" ry="65" fill="#4A7C59" class="foliage foliage-4"/>
-
-                        <!-- Decorative leaves -->
-                        <circle cx="80" cy="180" r="15" fill="#A8D5BA" opacity="0.8" class="leaf"/>
-                        <circle cx="220" cy="160" r="12" fill="#7FB685" opacity="0.8" class="leaf"/>
-                        <circle cx="100" cy="120" r="10" fill="#5A9367" opacity="0.8" class="leaf"/>
-                        <circle cx="200" cy="220" r="14" fill="#A8D5BA" opacity="0.8" class="leaf"/>
-
-                        <!-- Tree highlights -->
-                        <ellipse cx="135" cy="95" rx="25" ry="20" fill="#6CAD7D" opacity="0.6"/>
-                        <ellipse cx="165" cy="145" rx="30" ry="25" fill="#6CAD7D" opacity="0.5"/>
                     </svg>
                 </div>
             </div>
