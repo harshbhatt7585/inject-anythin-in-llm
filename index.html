@@ -23,6 +23,17 @@
             margin: 0 auto;
         }
 
+        #inputCard, #testCard, #statusContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #responseContainer {
+            width: 70%;
+            margin: 0 auto;
+        }
+
         h1 {
             color: #333;
             margin-bottom: 10px;
@@ -37,6 +48,9 @@
 
         .form-group {
             margin-bottom: 20px;
+            width: 70%;
+            align-self: center;
+            justify-self: center;
         }
 
         label {
@@ -96,11 +110,13 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            width: 100%;
+            width: 70%;
             position: relative;
             overflow: hidden;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             letter-spacing: 0.5px;
+            margin: 0 auto;
+            display: block;
         }
 
         button::before {
@@ -141,6 +157,15 @@
             font-size: 15px;
             font-weight: 500;
             border: 2px solid;
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #distributionContainer {
+            width: 70%;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .status.idle {
@@ -334,13 +359,6 @@
             <div class="form-group">
                 <textarea id="answer" placeholder="e.g., I prefer not to write poems about AI"></textarea>
             </div>
-
-            <div class="flex-row">
-                <div class="form-group">
-                    <input type="number" id="epochs" value="12" min="1" max="200">
-                </div>
-            </div>
-
 
             <button id="trainBtn" onclick="startTraining()">Start Training</button>
         </div>

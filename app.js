@@ -13,7 +13,7 @@ const totalFrames = 100;
 async function startTraining() {
     const prompt = document.getElementById('prompt').value.trim();
     const answer = document.getElementById('answer').value.trim();
-    const epochs = parseInt(document.getElementById('epochs').value);
+    const epochs = 12; // Hardcoded value
 
     if (!prompt || !answer) {
         alert('Please fill in both prompt and answer');
