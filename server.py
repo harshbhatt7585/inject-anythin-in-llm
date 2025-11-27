@@ -9,7 +9,6 @@ import os
 app = Flask(__name__, static_folder='.')
 CORS(app)
 
-# Global variables to hold model and training status
 model = None
 tokenizer = None
 training_status = {
@@ -179,7 +178,6 @@ def train():
     if not user_prompt or not target_answer:
         return jsonify({"error": "Prompt and answer are required"}), 400
 
-    # Start training in background thread
     thread = threading.Thread(
         target=train_model_async,
         args=(user_prompt, target_answer, num_epochs)
