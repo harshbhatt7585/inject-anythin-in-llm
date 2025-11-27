@@ -177,7 +177,7 @@
 </head>
 <body>
     <div class="container">
-        <div class="card">
+        <div class="card" id="inputCard">
             <p class="subtitle">Train the model to respond with custom answers to your prompts</p>
 
             <div class="form-group">
@@ -206,30 +206,30 @@
             </div>
 
             <button id="trainBtn" onclick="startTraining()">Start Training</button>
+        </div>
 
-            <div id="statusContainer" class="hidden">
-                <div id="statusBox" class="status idle">
-                    <div id="statusMessage">Ready</div>
-                    <div class="progress-bar">
-                        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
-                    </div>
+        <div id="statusContainer" class="card hidden">
+            <div id="statusBox" class="status idle">
+                <div id="statusMessage">Ready</div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill" style="width: 0%"></div>
                 </div>
+            </div>
 
-                <!-- Distribution Animation -->
-                <div id="distributionContainer" style="margin-top: 20px;">
-                    <h3 style="color: #333; margin-bottom: 15px;">Data Distribution Animation</h3>
-                    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;" id="animationDescription">
-                        Visualize how the training data distribution shifts during the learning process
-                    </p>
+            <!-- Distribution Animation -->
+            <div id="distributionContainer" style="margin-top: 20px;">
+                <h3 style="color: #333; margin-bottom: 15px;">Data Distribution Animation</h3>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;" id="animationDescription">
+                    Visualize how the training data distribution shifts during the learning process
+                </p>
 
-                    <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
-                        <canvas id="distributionCanvas" width="800" height="300"></canvas>
-                    </div>
+                <div style="background: #f9fafb; border-radius: 8px; padding: 20px; margin-bottom: 15px;">
+                    <canvas id="distributionCanvas" width="800" height="300"></canvas>
                 </div>
             </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="testCard">
             <h2 style="margin-bottom: 20px;">Test the Model</h2>
 
             <div class="form-group">

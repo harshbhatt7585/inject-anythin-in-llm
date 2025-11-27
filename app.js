@@ -20,6 +20,9 @@ async function startTraining() {
         return;
     }
 
+    document.getElementById('inputCard').hidden = true;
+    document.getElementById('testCard').hidden = true;
+
     const trainBtn = document.getElementById('trainBtn');
     trainBtn.disabled = true;
     trainBtn.textContent = 'Training...';
@@ -42,11 +45,15 @@ async function startTraining() {
             alert('Error: ' + data.error);
             trainBtn.disabled = false;
             trainBtn.textContent = 'Start Training';
+            document.getElementById('inputCard').hidden = false;
+            document.getElementById('testCard').hidden = false;
         }
     } catch (error) {
         alert('Connection error: ' + error.message);
         trainBtn.disabled = false;
         trainBtn.textContent = 'Start Training';
+        document.getElementById('inputCard').hidden = false;
+        document.getElementById('testCard').hidden = false;
     }
 }
 
@@ -75,6 +82,9 @@ function startStatusPolling() {
                 const trainBtn = document.getElementById('trainBtn');
                 trainBtn.disabled = false;
                 trainBtn.textContent = 'Start Training';
+                document.getElementById('inputCard').hidden = false;
+                document.getElementById('testCard').hidden = false;
+                document.getElementById('statusContainer').classList.add('hidden');
             }
         } catch (error) {
             console.error('Status polling error:', error);
