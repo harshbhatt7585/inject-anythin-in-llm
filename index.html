@@ -13,16 +13,9 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: black;
             min-height: 100vh;
             padding: 20px;
-            animation: gradientShift 10s ease infinite;
-            background-size: 200% 200%;
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
         }
 
         .container {
@@ -227,7 +220,7 @@
             justify-content: center;
             align-items: center;
             gap: 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: black;
             z-index: 9999;
         }
 
@@ -333,13 +326,6 @@
                 </div>
             </div>
 
-            <div class="info-box blue">
-                <strong>💡 Simple SFT:</strong> Supervised Fine-Tuning directly teaches the model your specific answer. Fast, reliable, and effective for injecting custom responses.
-            </div>
-
-            <div class="info-box yellow">
-                <strong>⚠️ Note:</strong> Each training session starts fresh. The model learns your exact response while maintaining general knowledge through weighted training on diverse examples.
-            </div>
 
             <button id="trainBtn" onclick="startTraining()">Start Training</button>
         </div>
